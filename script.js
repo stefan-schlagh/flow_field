@@ -8,7 +8,7 @@ import { noise } from "./node_modules/@chriscourses/perlin-noise/index.js";
   function draw() {
     background(220);
   }*/
-const nScale = 5
+const nScale = 15
 
 class Vector{
     constructor(x,y,sizeX,sizeY){
@@ -61,7 +61,7 @@ function initVectors(){
 function draw(){
 
     var ctx = c.getContext("2d");
-    ctx.clearRect(0, 0, c.width, c.height);
+    //ctx.clearRect(0, 0, c.width, c.height);
 
     for(let i = 0;i<nx;i+=1){
         for(let j = 0;j<ny;j+=1){
@@ -71,7 +71,7 @@ function draw(){
                 0,
                 ${Math.floor(255 - (vector.noise() * 255))},
                 ${Math.floor((vector.noise() * 100))})`;
-            ctx.arc(vector.origin.x*s + s/2, vector.origin.y*s + s/2, vector.noise() * arcSize, 0, 2 * Math.PI);
+            ctx.arc(vector.origin.x*s + s/2, vector.origin.y*s + s/2, /*vector.noise() * arcSize*/ 1, 0, 2 * Math.PI);
             ctx.fill()
             ctx.stroke();
 
@@ -87,7 +87,7 @@ function draw(){
             ctx.stroke();*/
             
             // calc angle between 0 and 180 deg
-            let alpha = noise(i / nScale,j / nScale) * Math.PI * 2 //- Math.PI / 2
+            /*let alpha = noise(i / nScale,j / nScale) * Math.PI * 2 //- Math.PI / 2
             let a = Math.sin(alpha)*s/2
             let b = Math.cos(alpha)*s/2
 
@@ -95,7 +95,7 @@ function draw(){
             ctx.strokeStyle = "red"
 
             ctx.moveTo(i*s + s/2 - b, j*s + s/2 - a)
-            ctx.lineTo(i*s + s/2 + b, j*s + s/2 + a)
+            ctx.lineTo(i*s + s/2 + b, j*s + s/2 + a)*/
 
 
             //ctx.moveTo(i*s, j*s + s/2)
