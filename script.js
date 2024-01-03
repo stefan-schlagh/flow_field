@@ -67,39 +67,17 @@ function draw(){
         for(let j = 0;j<ny;j+=1){
             let vector = vectors[i][j]
             ctx.beginPath();
-            ctx.fillStyle = ctx.strokeStyle = `rgb(
+            ctx.fillStyle = ctx.strokeStyle = `rgb(0,0,0)`;
+            /*ctx.fillStyle = ctx.strokeStyle = `rgb(
                 0,
                 ${Math.floor(255 - (vector.noise() * 255))},
-                ${Math.floor((vector.noise() * 100))})`;
-            ctx.arc(vector.origin.x*s + s/2, vector.origin.y*s + s/2, /*vector.noise() * arcSize*/ 1, 0, 2 * Math.PI);
+                ${Math.floor((vector.noise() * 100))})`;*/
+            ctx.fillRect(vector.origin.x*s + s/2, vector.origin.y*s + s/2, 1,1);
             ctx.fill()
             ctx.stroke();
 
             vector.move()
 
-            /*ctx.beginPath();
-            ctx.fillStyle = ctx.strokeStyle = `rgb(
-                0,
-                ${Math.floor(255 - noise(i,j) * 42.5 * i)},
-                ${Math.floor(255 - noise(i,j) * 42.5 * j)})`;
-            ctx.arc(i*s + s/2, j*s + s/2, noise(i,j) * size, 0, 2 * Math.PI);
-            ctx.fill()
-            ctx.stroke();*/
-            
-            // calc angle between 0 and 180 deg
-            /*let alpha = noise(i / nScale,j / nScale) * Math.PI * 2 //- Math.PI / 2
-            let a = Math.sin(alpha)*s/2
-            let b = Math.cos(alpha)*s/2
-
-            ctx.beginPath();
-            ctx.strokeStyle = "red"
-
-            ctx.moveTo(i*s + s/2 - b, j*s + s/2 - a)
-            ctx.lineTo(i*s + s/2 + b, j*s + s/2 + a)*/
-
-
-            //ctx.moveTo(i*s, j*s + s/2)
-            //ctx.lineTo(i*s + s, j*s + s/2)
             ctx.stroke();
 
         }
