@@ -5,8 +5,23 @@ const c = document.getElementById("canvas1");
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
+const settings = {
+    shift_perlin_noise: true,
+    create_on_mouse_over: false,
+    refresh_interval_ms: 20,
+    stay_in_canvas: true
+}
+
 // noise scale
-const nScale = 15
+let nScale = 15
+let nShift = 0
+
+if(settings.shift_perlin_noise){
+    setInterval(function() {
+        nShift = nShift + 0.05 % 100
+    }, settings.refresh_interval_ms);
+}
+
 // canvas scale
 const s = 20
 const nx = parseInt(c.width / s)
@@ -26,7 +41,7 @@ class Vector{
         this.velocity = 0.03
     }
 
-    move(stayinCanvas = false){
+    move(){
         // angle in radiant
         let direction = this.noise() * Math.PI * 2 //- (Math.PI / 2)
         let a = Math.sin(direction) * this.velocity
@@ -37,7 +52,7 @@ class Vector{
                 first options: always cut to max size, do not allow negative values
                 second option: allows both negative values and bigger sizes than max
         */
-        if(stayinCanvas){
+        if(settings.stay_in_canvas){
             this.origin.x = (this.origin.x + b + this.sizeX) % this.sizeX
             this.origin.y = (this.origin.y + a + this.sizeY) % this.sizeY
         } else {
@@ -48,7 +63,7 @@ class Vector{
     }
 
     noise(){
-        return noise(this.origin.x / nScale,this.origin.y / nScale)
+        return noise((this.origin.x + nShift) / nScale,(this.origin.y + nShift) / nScale)
     }
 
     isinsideCanvas(){
@@ -63,10 +78,11 @@ class Vector{
 }
 
 
-
-const vectors = new Array(nx * ny)
+let vectors = new Array()
 
 function initVectors(){
+    vectors = new Array(nx * ny)
+
     for(let i = 0;i < nx;i += 1){
         for(let j = 0;j < ny;j += 1){
             vectors[i + j*nx] = new Vector(i,j,nx,ny)
@@ -76,30 +92,18 @@ function initVectors(){
 
 function draw(){
 
-    //console.log(vectors.length)
-
     var ctx = c.getContext("2d");
-    //ctx.clearRect(0, 0, c.width, c.height);
-
-    /*for(let i = 0;i<nx;i+=1){
-        for(let j = 0;j<ny;j+=1){*/
-    
-    //console.log(vectors)
 
     for(let i=0;i < vectors.length;i++){
 
         const vector = vectors[i]
 
-        //console.log(vector)
-
-        //let vector = vectors[i][j]
         ctx.beginPath();
-        //ctx.fillStyle = ctx.strokeStyle = `rgb(0,0,0)`;
         ctx.fillStyle = ctx.strokeStyle = `rgba(
             0,
             ${Math.floor(255 - (vector.noise() * 255))},
             ${Math.floor((vector.noise() * 100))},
-            0.2)`;
+            0.1)`;
         //*/
         ctx.fillRect(vector.origin.x*s, vector.origin.y*s, 1,1);
         ctx.fill()
@@ -118,19 +122,20 @@ function draw(){
 }
 initVectors()
 
-const interval = setInterval(function() {
+setInterval(function() {
     draw()
-}, 20);
+}, settings.refresh_interval_ms);
 
+// add elements on mouseover
+if(settings.create_on_mouse_over) {
+    document.addEventListener('mousemove', (event) => {
+        console.log(`Mouse position: (${event.clientX}, ${event.clientY})`);
 
-document.addEventListener('mousemove', (event) => {
-    console.log(`Mouse position: (${event.clientX}, ${event.clientY})`);
+        const v = new Vector(event.clientX / s, event.clientY / s, nx, ny)
 
-    const v = new Vector(event.clientX / s, event.clientY / s, nx, ny)
+        console.log(v)
+        console.log(v.isinsideCanvas())
 
-    console.log(v)
-    console.log(v.isinsideCanvas())
-
-    vectors.push(v)
-});
-
+        vectors.push(v)
+    });
+}
